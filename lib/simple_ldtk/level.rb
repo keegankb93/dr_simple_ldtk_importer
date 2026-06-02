@@ -1,13 +1,13 @@
-require "lib/simple_ldtk/debugger"
-require "lib/simple_ldtk/config"
-require "lib/simple_ldtk/level_data"
+require 'lib/simple_ldtk/debugger'
+require 'lib/simple_ldtk/config'
+require 'lib/simple_ldtk/level_data'
 
 module SimpleLdtk
   module Level
     extend self
 
-    DATA_FILE = "data.json"
-    INT_GRID_FILE = "Collisions.csv"
+    DATA_FILE = 'data.json'
+    INT_GRID_FILE = 'Collisions.csv'
 
     #
     # Loads a level from the given directory.
@@ -27,13 +27,15 @@ module SimpleLdtk
         int_grids: load_int_grids(dir, data, config)
       )
 
-      level.extend(Debugger) unless DR.production? # Not sure if this is like the best idea, but it's ok right now
+      level.extend(Debugger) unless DR.production? # Not sure if this is the best idea, but it's ok right now
 
       level
     end
 
     private
 
+    #
+    # Loads all integer grid CSV files from the given directory into a hash of grid name => 2D array of cell values.
     def load_int_grids(dir, data, config)
       config.int_grid_configs.each_with_object({}) do |(name, grid_config), result|
         path = "#{dir}/#{INT_GRID_FILE}"
@@ -47,6 +49,10 @@ module SimpleLdtk
       end
     end
 
+    #
+    # Loads an integer grid CSV file into a 2D array of cell values.
+    # May benefit from doing [0,0] => value instead of 2D array lookup. Not a huge deal right now.
+    # TODO: Split up this method a bit/polish it up
     def load_int_grid_csv(path:, level_height:, tile_size:, grid_config:)
       rows = parse_csv(DR.read_file(path))
       cells = []
@@ -86,7 +92,7 @@ module SimpleLdtk
     def parse_csv(text)
       text
         .split("\n")
-        .map { |line| line.strip.split(",") }
+        .map { |line| line.strip.split(',') }
     end
   end
 end
