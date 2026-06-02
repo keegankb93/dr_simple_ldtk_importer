@@ -28,7 +28,7 @@ module Main
 
     camera.handle_camera_inputs(args)
 
-    args.state.player ||= { x: 0, y: 0, w: 16, h: 16 }
+    args.state.player ||= { x: 0, y: 0, w: 12, h: 12 }
     player = args.state.player
 
     if args.inputs.directional_angle
