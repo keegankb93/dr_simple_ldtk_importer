@@ -49,6 +49,8 @@ module Main
     scene = args.outputs[:scene]
     scene.w = level.width
     scene.h = level.height
+
+    # Renders the world sprites
     scene.sprites << level.world
 
     # Debugs the int grid 'Collisions' and highlights the solid tiles in red

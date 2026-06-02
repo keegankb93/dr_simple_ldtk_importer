@@ -50,6 +50,8 @@ module Main
     scene = args.outputs[:scene]
     scene.w = level.width
     scene.h = level.height
+
+    # Should make a better name than world, maybe.
     scene.sprites << level.world
 
     scene.debug << level.debug_int_grid(
