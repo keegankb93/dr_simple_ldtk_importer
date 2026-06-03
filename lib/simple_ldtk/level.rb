@@ -7,7 +7,6 @@ module SimpleLdtk
     extend self
 
     DATA_FILE = 'data.json'
-    INT_GRID_FILE = 'Collisions.csv'
 
     #
     # Loads a level from the given directory.
@@ -76,7 +75,7 @@ module SimpleLdtk
     # Loads all integer grid CSV files from the given directory into a hash of grid name => 2D array of cell values.
     def load_int_grids(dir, data, config)
       config.int_grid_configs.each_with_object({}) do |(name, grid_config), result|
-        path = "#{dir}/#{INT_GRID_FILE}"
+        path = "#{dir}/#{name}.csv"
 
         result[name] = load_int_grid_csv(
           path: path,
