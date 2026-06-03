@@ -10,8 +10,7 @@ into DragonRuby. Ideally, this gives you everything you need to import LDtk leve
 
 ## Todo:
 
-- [] Register entities with the importer to load them into the game
-- [] Polish, document and look for potentialy performance improvements
+- continued enhancements and debugging capabilities
 
 ## Installation
 
