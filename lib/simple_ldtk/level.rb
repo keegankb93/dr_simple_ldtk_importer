@@ -24,7 +24,8 @@ module SimpleLdtk
         dir: dir,
         data: data,
         composite_path: "#{dir}/_composite.png",
-        int_grids: load_int_grids(dir, data, config)
+        int_grids: load_int_grids(dir, data, config),
+        entities: load_entities(data, config)
       )
 
       level.extend(Debugger) unless DR.production? # Not sure if this is the best idea, but it's ok right now
@@ -33,6 +34,43 @@ module SimpleLdtk
     end
 
     private
+
+    #
+    # Loads the entities from the data json and either
+    # maps it to a user defined entity or returns a normalized entity.
+    def load_entities(data, config)
+      raw_entities = data.fetch('entities', {})
+
+      raw_entities.each_with_object({}) do |(name, instances), result|
+        entity_config = config.entity_configs[name]
+
+        result[name] = instances.map do |raw_entity|
+          entity = normalize_entity(name, raw_entity, data)
+
+          entity_config ? entity_config.map_entity(entity) : entity
+        end
+      end
+    end
+
+    #
+    # Maps a raw entity json into a workable hash.
+    def normalize_entity(name, raw_entity, data)
+      level_height = data['height']
+
+      {
+        id: raw_entity['id'],
+        iid: raw_entity['iid'],
+        type: name,
+        layer: raw_entity['layer'],
+        x: raw_entity['x'],
+        y: level_height - raw_entity['y'],
+        w: raw_entity['width'],
+        h: raw_entity['height'],
+        color: raw_entity['color'],
+        fields: raw_entity.fetch('customFields', {}),
+        raw_entity: raw_entity
+      }
+    end
 
     #
     # Loads all integer grid CSV files from the given directory into a hash of grid name => 2D array of cell values.

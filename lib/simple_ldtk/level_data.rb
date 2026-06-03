@@ -8,9 +8,10 @@ module SimpleLdtk
                 :height,
                 :bg_color,
                 :composite_path,
-                :int_grids
+                :int_grids,
+                :entities
 
-    def initialize(dir:, data:, composite_path:, int_grids:)
+    def initialize(dir:, data:, composite_path:, int_grids:, entities:)
       @dir = dir
       @data = data
       @width = data['width']
@@ -18,13 +19,14 @@ module SimpleLdtk
       @bg_color = data['bgColor']
       @composite_path = composite_path
       @int_grids = int_grids
+      @entities = entities
     end
 
     #
     # This is the composite image for the level set to a default of 0,0
     # Width and height are taken from the level data and the composite path
     # is set when the level is loaded.
-    def world(x: 0, y: 0)
+    def tilemap(x: 0, y: 0)
       {
         x: x,
         y: y,
@@ -38,6 +40,20 @@ module SimpleLdtk
     # Returns the integer grid for the given name.
     def int_grid(name)
       int_grids[name] || []
+    end
+
+    #
+    # Returns all entities of the given name.
+    def entities_for(name)
+      entities[name] || []
+    end
+
+    #
+    # Returns the first entity of the given name.
+    # Mainly a helper for entities where you know you will only have one of a given type.
+    # For example, you might have a single player entity, so you can call `entity('Player')` to get it.
+    def entity(name)
+      entities_for(name).first
     end
 
     #

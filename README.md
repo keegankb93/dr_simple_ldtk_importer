@@ -42,30 +42,39 @@ module Main
         grid.value 2, as: :ladder
         grid.value 3, as: :solid
       end
+
+      config.entity 'Player' do |e|
+        # This needs to be an "entity" or object that responds to x, y, w, h (rect)
+        # So alternatively you can use a hash like `{ x: e.x, y: e.y, w: e.w, h: e.h }`
+        # If you don't config anything here, it will just return the raw entity data provided in the # Ldtk data file
+        Player.new(x: e.x, y: e.y, w: e.w, h: e.h, path: :solid, r: 0, g: 0, b: 255)
+      end
     end
 
     level = args.state.level
+
+    # This is your instantiated player or rect
+    # This is a convience method when you know you'll only have a singular entity, so when dealing
+    # with multiple entities you can also use `level.entities_for('Chests')` etc. to get all entities of that type
+    args.state.player ||= level.entity('Player')
+    player = args.state.player
+    player.tick(args)
 
     scene = args.outputs[:scene]
     scene.w = level.width
     scene.h = level.height
 
-    # Renders the world sprites
-    scene.sprites << level.world
+    # Renders the tilemap and player sprites
+    scene.sprites << level.tilemap
+    scene.sprites << player
 
-    # Debugs the int grid 'Collisions' and highlights the solid tiles in red
-    scene.debug << level.debug_int_grid(
-      'Collisions',
-      type: :solid,
-      color: [255, 0, 0]
-    )
-
-    # Debugs the int grid 'Collisions' and highlights the ladder tiles in cyan
-    scene.debug << level.debug_int_grid(
-      'Collisions',
-      type: :ladder,
-      color: [0, 255, 255]
-    )
+    scene.debug << level.debug_int_grid do |debug|
+      # Debugs the int grid 'Collisions' and highlights the solid tiles in red
+      debug.int_grid 'Collisions', type: :solid, color: [255, 0, 0]
+      
+      # Debugs the int grid 'Collisions' and highlights the ladder tiles in cyan
+      debug.int_grid 'Collisions', type: :ladder, color: [0, 255, 255]
+    end
   end
 end
 ```
