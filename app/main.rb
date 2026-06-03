@@ -5,6 +5,7 @@ require 'app/player'
 module Main
   def tick(args)
     args.state.level ||= ::SimpleLdtk::Level.load('maps/level_one') do |config|
+      # If using the city example, tile_size should be set to 8
       config.tile_size = 16
 
       #
